@@ -6,7 +6,7 @@ export default async function handler(req, res) {
 
         // Simulate the upload by waiting for the file to be received
         req.on('data', chunk => {
-            // You can choose to process the data if you need to
+            // Process the incoming data
         });
 
         req.on('end', () => {
