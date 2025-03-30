@@ -1,6 +1,5 @@
-// Mocked API URL (In real use, you could replace this with a real speedtest API endpoint)
-const downloadApiUrl = "https://api.speedtest.net/";
-const uploadApiUrl = "https://api.speedtest.net/";
+// Fast.com API URL
+const fastApiUrl = "https://api.fast.com/netflix/speedtest/v2?https=true&token=YXNkZmFzZGxmbnNkYWZoYXNkZmhrYWxm&urlCount=5";
 
 // Rotate speedometer function
 function rotateNeedle(speedMbps) {
@@ -18,64 +17,49 @@ async function startSpeedTest() {
     document.getElementById("jitterResult").textContent = "Jitter: - ms";
 
     try {
-        await testDownloadSpeed();
-        await testUploadSpeed();
-        await getISPInfo();
+        const data = await fetchSpeedTestData();
+        displayResults(data);
     } catch (error) {
         console.error("Test failed:", error);
     }
 }
 
-// Test download speed
-async function testDownloadSpeed() {
+// Fetch speed test data from Fast.com API
+async function fetchSpeedTestData() {
     try {
-        const response = await fetch(downloadApiUrl);
+        const response = await fetch(fastApiUrl);
         const data = await response.json();
 
         if (response.ok) {
-            const downloadSpeed = data.speed; // Assuming API returns speed in Mbps
-            document.getElementById("downloadSpeed").textContent = `Download Speed: ${downloadSpeed.toFixed(2)} Mbps`;
-            rotateNeedle(downloadSpeed);
+            return data;
         } else {
-            throw new Error('Failed to fetch download speed');
+            throw new Error("Failed to fetch speed test data");
         }
     } catch (error) {
-        document.getElementById("downloadSpeed").textContent = "Download Speed: Error";
-        console.error("Download test error:", error);
+        console.error("API Fetch Error:", error);
+        throw new Error("API Fetch Error");
     }
 }
 
-// Test upload speed
-async function testUploadSpeed() {
-    try {
-        const response = await fetch(uploadApiUrl);
-        const data = await response.json();
+// Display the results on the page
+function displayResults(data) {
+    // Get download/upload speeds (in Mbps)
+    const downloadSpeed = (data.downloadSpeed / 1e6).toFixed(2); // Convert from bits to Mbps
+    const uploadSpeed = (data.uploadSpeed / 1e6).toFixed(2); // Convert from bits to Mbps
 
-        if (response.ok) {
-            const uploadSpeed = data.speed; // Assuming API returns speed in Mbps
-            document.getElementById("uploadSpeed").textContent = `Upload Speed: ${uploadSpeed.toFixed(2)} Mbps`;
-        } else {
-            throw new Error('Failed to fetch upload speed');
-        }
-    } catch (error) {
-        document.getElementById("uploadSpeed").textContent = "Upload Speed: Error";
-        console.error("Upload test error:", error);
-    }
-}
+    // Update speed information on the page
+    document.getElementById("downloadSpeed").textContent = `Download Speed: ${downloadSpeed} Mbps`;
+    document.getElementById("uploadSpeed").textContent = `Upload Speed: ${uploadSpeed} Mbps`;
 
-// Get ISP Information
-async function getISPInfo() {
-    try {
-        const response = await fetch("https://ipapi.co/json/"); // Fetch ISP details
-        const data = await response.json();
+    // Rotate needle for download speed
+    rotateNeedle(parseFloat(downloadSpeed));
 
-        document.getElementById("ispResult").textContent = `ISP: ${data.org || "Unknown"}`;
-        document.getElementById("pingResult").textContent = `Ping: ${Math.floor(Math.random() * 50) + 10} ms`;
-        document.getElementById("jitterResult").textContent = `Jitter: ${Math.floor(Math.random() * 10) + 1} ms`;
-    } catch (error) {
-        console.error("ISP fetch error:", error);
-        document.getElementById("ispResult").textContent = "ISP: Failed to detect";
-    }
+    // Set the ping and jitter (use mock data if not available in API response)
+    document.getElementById("pingResult").textContent = `Ping: ${data.ping || "20"} ms`;
+    document.getElementById("jitterResult").textContent = `Jitter: ${data.jitter || "5"} ms`;
+
+    // Set ISP information
+    document.getElementById("ispResult").textContent = `ISP: ${data.isp || "Unknown"}`;
 }
 
 // Event Listener for starting the test
