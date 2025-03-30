@@ -1,11 +1,11 @@
-document.getElementById("start-test").addEventListener("click", startSpeedTest);
+document.getElementById("startTest").addEventListener("click", startSpeedTest);
 
 async function startSpeedTest() {
-    document.getElementById("isp").textContent = "Fetching...";
-    document.getElementById("download-speed").textContent = "Download Speed: - Mbps";
-    document.getElementById("upload-speed").textContent = "Upload Speed: - Mbps";
-    document.getElementById("ping").textContent = "Ping: - ms";
-    document.getElementById("jitter").textContent = "Jitter: - ms";
+    document.getElementById("ispResult").textContent = "Fetching...";
+    document.getElementById("downloadSpeed").textContent = "Download Speed: - Mbps";
+    document.getElementById("uploadSpeed").textContent = "Upload Speed: - Mbps";
+    document.getElementById("pingResult").textContent = "Ping: - ms";
+    document.getElementById("jitterResult").textContent = "Jitter: - ms";
 
     await testDownloadSpeed();
     await testUploadSpeed();
@@ -13,7 +13,7 @@ async function startSpeedTest() {
 }
 
 async function testDownloadSpeed() {
-    const url = "https://download.thinkbroadband.com/10MB.zip"; // Working file
+    const url = "https://download.thinkbroadband.com/10MB.zip"; // Working file for download test
     try {
         const startTime = performance.now();
         const response = await fetch(url, { cache: "no-store" });
@@ -24,21 +24,21 @@ async function testDownloadSpeed() {
 
         const blob = await response.blob();
         const endTime = performance.now();
-        
+
         const fileSizeInBits = blob.size * 8;
         const timeTakenInSeconds = (endTime - startTime) / 1000;
         const speedMbps = (fileSizeInBits / timeTakenInSeconds) / (1024 * 1024);
 
-        document.getElementById("download-speed").textContent = `Download Speed: ${speedMbps.toFixed(2)} Mbps`;
+        document.getElementById("downloadSpeed").textContent = `Download Speed: ${speedMbps.toFixed(2)} Mbps`;
 
     } catch (error) {
         console.error("Download test error:", error);
-        document.getElementById("download-speed").textContent = "Download Speed: Error";
+        document.getElementById("downloadSpeed").textContent = "Download Speed: Error";
     }
 }
 
 async function testUploadSpeed() {
-    const url = "https://speedtest.yourserver.com/upload"; // Replace with a working upload endpoint
+    const url = "/api/upload-speed"; // Vercel serverless function endpoint for upload speed test
     const data = new Blob([new ArrayBuffer(2 * 1024 * 1024)]); // 2MB file
 
     try {
@@ -58,11 +58,12 @@ async function testUploadSpeed() {
         const timeTakenInSeconds = (endTime - startTime) / 1000;
         const speedMbps = (fileSizeInBits / timeTakenInSeconds) / (1024 * 1024);
 
-        document.getElementById("upload-speed").textContent = `Upload Speed: ${speedMbps.toFixed(2)} Mbps`;
+        const responseData = await response.json();
+        document.getElementById("uploadSpeed").textContent = `Upload Speed: ${responseData.speedMbps.toFixed(2)} Mbps`;
 
     } catch (error) {
         console.error("Upload test error:", error);
-        document.getElementById("upload-speed").textContent = "Upload Speed: Error";
+        document.getElementById("uploadSpeed").textContent = "Upload Speed: Error";
     }
 }
 
@@ -71,12 +72,12 @@ async function getISPInfo() {
         const response = await fetch("https://ipapi.co/json/");
         const data = await response.json();
 
-        document.getElementById("isp").textContent = `ISP: ${data.org || "Unknown"}`;
-        document.getElementById("ping").textContent = `Ping: ${Math.floor(Math.random() * 50) + 10} ms`;
-        document.getElementById("jitter").textContent = `Jitter: ${Math.floor(Math.random() * 10) + 1} ms`;
+        document.getElementById("ispResult").textContent = `ISP: ${data.org || "Unknown"}`;
+        document.getElementById("pingResult").textContent = `Ping: ${Math.floor(Math.random() * 50) + 10} ms`;
+        document.getElementById("jitterResult").textContent = `Jitter: ${Math.floor(Math.random() * 10) + 1} ms`;
 
     } catch (error) {
         console.error("ISP fetch error:", error);
-        document.getElementById("isp").textContent = "ISP: Failed to detect";
+        document.getElementById("ispResult").textContent = "ISP: Failed to detect";
     }
 }
