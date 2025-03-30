@@ -1,6 +1,6 @@
 // Mocked API URL (In real use, you could replace this with a real speedtest API endpoint)
-const downloadApiUrl = "https://api.mockspeedtest.com/download";
-const uploadApiUrl = "https://api.mockspeedtest.com/upload";
+const downloadApiUrl = "https://api.speedtest.net/";
+const uploadApiUrl = "https://api.speedtest.net/";
 
 // Rotate speedometer function
 function rotateNeedle(speedMbps) {
