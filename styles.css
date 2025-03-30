@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: #1a1a2e;
+    color: #e0e0e0;
+    text-align: center;
+    padding: 20px;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 30px;
+    background: #16213e;
+}
+
+.navbar .logo {
+    font-size: 22px;
+    font-weight: bold;
+    color: #ffcc00;
+}
+
+.navbar ul {
+    display: flex;
+    list-style: none;
+}
+
+.navbar ul li {
+    margin: 0 15px;
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: #fff;
+}
+
+.container {
+    margin-top: 40px;
+}
+
+.speedometer {
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, #282c34 60%, #1a1a2e);
+    border-radius: 50%;
+    position: relative;
+    margin: 20px auto;
+}
+
+.needle {
+    width: 6px;
+    height: 80px;
+    background: red;
+    position: absolute;
+    left: 50%;
+    bottom: 50%;
+    transform-origin: bottom;
+    transform: rotate(-90deg);
+    transition: transform 1s ease-in-out;
+}
+
+.speed-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    font-weight: bold;
+}
+
+button {
+    background: #ffcc00;
+    padding: 12px 24px;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    margin: 20px;
+}
+
+.results {
+    margin-top: 20px;
+    font-size: 18px;
+}
+
+/* Ads */
+.ad-container {
+    margin-top: 30px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .speedometer {
+        width: 180px;
+        height: 180px;
+    }
+}
