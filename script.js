@@ -15,7 +15,7 @@ async function startSpeedTest() {
 }
 
 async function testDownloadSpeed() {
-    const url = "/api/download-speed"; // Vercel API endpoint for download test
+    const url = "/api/download-speed.js"; // Vercel API endpoint for download test
     try {
         const response = await fetch(url);
         const data = await response.json();
@@ -37,7 +37,7 @@ async function testDownloadSpeed() {
 }
 
 async function testUploadSpeed() {
-    const url = "/api/upload-speed"; // Vercel API endpoint for upload test
+    const url = "/api/upload-speed.js"; // Vercel API endpoint for upload test
     const data = new Blob([new ArrayBuffer(2 * 1024 * 1024)]); // 2MB file for testing
 
     try {
