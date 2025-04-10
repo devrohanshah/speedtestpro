@@ -1,8 +1,8 @@
 {
   "redirects": [
     {
-      "source": "/thank-you.html",
-      "destination": "/thank-you",
+      "source": "/thank-you",
+      "destination": "/thank-you.html",
       "permanent": true
     }
   ]
