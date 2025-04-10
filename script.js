@@ -21,8 +21,8 @@ const serverModal = document.getElementById('serverModal');
 const closeServerModal = document.getElementById('closeServerModal');
 const confirmServerSelection = document.getElementById('confirmServerSelection');
 const currentServer = document.getElementById('currentServer');
-const navToggle = document.getElementById('navToggle');
-const navList = document.getElementById('navList');
+// const navToggle = document.getElementById('navToggle');
+// const navList = document.getElementById('navList');
 
 // Configuration variables
 const downloadTestFile = 'https://upload.wikimedia.org/wikipedia/commons/3/3e/Tokyo_Sky_Tree_2012.JPG'; // ~8MB file
@@ -53,7 +53,7 @@ function initializeApp() {
     changeServer.addEventListener('click', openServerModal);
     closeServerModal.addEventListener('click', closeModal);
     confirmServerSelection.addEventListener('click', confirmServer);
-    navToggle.addEventListener('click', toggleNavMenu);
+    // navToggle.addEventListener('click', toggleNavMenu);
     
     // Server selection listeners
     const serverOptions = document.querySelectorAll('.server-option');
@@ -406,17 +406,17 @@ document.getElementById('saveBtn').addEventListener('click', function() {
 });
 
 
-       // // Navigation functionality
-       //  document.addEventListener('DOMContentLoaded', function() {
-       //      // Toggle navigation on mobile
-       //      const navToggle = document.getElementById('navToggle');
-       //      const navList = document.getElementById('navList');
+       // Navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle navigation on mobile
+            const navToggle = document.getElementById('navToggle');
+            const navList = document.getElementById('navList');
             
-       //      if (navToggle) {
-       //          navToggle.addEventListener('click', function() {
-       //              navList.classList.toggle('active');
-       //          });
-       //      }
+            if (navToggle) {
+                navToggle.addEventListener('click', function() {
+                    navList.classList.toggle('active');
+                });
+            }
 
             // Page navigation functionality
             const homeLink = document.getElementById('homeLink');
