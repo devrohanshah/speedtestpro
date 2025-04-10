@@ -312,7 +312,7 @@ function runDownloadTest() {
     });
 }
 
-// Upload Test
+// Upload Test - Fixed to avoid invalid array length
 function runUploadTest() {
     return new Promise((resolve, reject) => {
         updateTestStatus('Testing Upload...');
@@ -337,16 +337,8 @@ function simulateUploadTest() {
         const totalIterations = 100;
         const simulationDuration = 3000; // 3 seconds
         
-        // Generate random upload data (in a real app, this would be actual data)
-        const generateRandomData = size => {
-            const data = new Array(size);
-            for (let i = 0; i < size; i++) {
-                data[i] = Math.random().toString(36).substring(2, 15);
-            }
-            return data.join('');
-        };
-        
-        const data = generateRandomData(uploadTestSize / 50);
+        // Fixed: Instead of generating a huge array, we'll simulate the data
+        // by calculating what the upload speed would be based on download speed
         
         // Simulate upload progress
         const simulateProgress = () => {
@@ -355,7 +347,9 @@ function simulateUploadTest() {
             
             // Calculate simulated speed (random variation for realism)
             const variation = 0.7 + Math.random() * 0.6; // 0.7 to 1.3 multiplier
-            const maxUploadSpeedMbps = downloadSpeed * 0.3 * variation; // Upload typically slower than download
+            // Upload typically slower than download (about 20-40% of download)
+            const uploadRatio = 0.3 + Math.random() * 0.2;
+            const maxUploadSpeedMbps = downloadSpeed * uploadRatio * variation;
             const currentUploadSpeed = maxUploadSpeedMbps * (progressPercentage / 100);
             
             // Update UI
@@ -369,9 +363,9 @@ function simulateUploadTest() {
                 const endTime = performance.now();
                 const durationSeconds = (endTime - startTime) / 1000;
                 
-                // Calculate final upload speed
-                const calculatedSpeed = (uploadTestSize * 8) / durationSeconds / 1024 / 1024;
-                resolve(calculatedSpeed);
+                // Final upload speed is a percentage of download speed
+                const finalUploadSpeed = downloadSpeed * uploadRatio;
+                resolve(finalUploadSpeed);
             }
         };
         
