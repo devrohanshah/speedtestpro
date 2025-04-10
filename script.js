@@ -406,7 +406,7 @@ document.getElementById('saveBtn').addEventListener('click', function() {
 });
 
 
-        // Navigation functionality
+       // Navigation functionality
         document.addEventListener('DOMContentLoaded', function() {
             // Toggle navigation on mobile
             const navToggle = document.getElementById('navToggle');
@@ -418,33 +418,53 @@ document.getElementById('saveBtn').addEventListener('click', function() {
                 });
             }
 
-            // About page functionality
-            const aboutLink = document.getElementById('aboutLink');
+            // Page navigation functionality
             const homeLink = document.getElementById('homeLink');
+            const aboutLink = document.getElementById('aboutLink');
+            const contactLink = document.getElementById('contactLink');
             const mainContent = document.getElementById('mainContent');
             const aboutPage = document.getElementById('aboutPage');
+            const contactPage = document.getElementById('contactPage');
             
+            // Function to hide all pages
+            function hideAllPages() {
+                mainContent.classList.add('hidden');
+                aboutPage.classList.remove('visible');
+                contactPage.classList.remove('visible');
+                
+                // Remove active class from all nav items
+                document.querySelectorAll('.nav-item a').forEach(item => {
+                    item.classList.remove('active');
+                });
+            }
+            
+            // Home page
+            if (homeLink) {
+                homeLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    hideAllPages();
+                    mainContent.classList.remove('hidden');
+                    homeLink.classList.add('active');
+                });
+            }
+            
+            // About page
             if (aboutLink) {
                 aboutLink.addEventListener('click', function(e) {
                     e.preventDefault();
-                    mainContent.classList.add('hidden');
+                    hideAllPages();
                     aboutPage.classList.add('visible');
-                    
-                    // Update active state
-                    document.querySelector('.nav-item a.active').classList.remove('active');
                     aboutLink.classList.add('active');
                 });
             }
             
-            if (homeLink) {
-                homeLink.addEventListener('click', function(e) {
+            // Contact page
+            if (contactLink) {
+                contactLink.addEventListener('click', function(e) {
                     e.preventDefault();
-                    mainContent.classList.remove('hidden');
-                    aboutPage.classList.remove('visible');
-                    
-                    // Update active state
-                    document.querySelector('.nav-item a.active').classList.remove('active');
-                    homeLink.classList.add('active');
+                    hideAllPages();
+                    contactPage.classList.add('visible');
+                    contactLink.classList.add('active');
                 });
             }
 
@@ -508,6 +528,3 @@ document.getElementById('saveBtn').addEventListener('click', function() {
                 });
             }
         });
-
-        // Your original script.js content would go here
-        // This is a placeholder for the speed test functionality
