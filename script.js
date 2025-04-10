@@ -404,3 +404,110 @@ document.getElementById('saveBtn').addEventListener('click', function() {
     // In a real app, this would save to a database or local storage
     alert('Results saved! You can view your history in the Results tab.');
 });
+
+
+        // Navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle navigation on mobile
+            const navToggle = document.getElementById('navToggle');
+            const navList = document.getElementById('navList');
+            
+            if (navToggle) {
+                navToggle.addEventListener('click', function() {
+                    navList.classList.toggle('active');
+                });
+            }
+
+            // About page functionality
+            const aboutLink = document.getElementById('aboutLink');
+            const homeLink = document.getElementById('homeLink');
+            const mainContent = document.getElementById('mainContent');
+            const aboutPage = document.getElementById('aboutPage');
+            
+            if (aboutLink) {
+                aboutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    mainContent.classList.add('hidden');
+                    aboutPage.classList.add('visible');
+                    
+                    // Update active state
+                    document.querySelector('.nav-item a.active').classList.remove('active');
+                    aboutLink.classList.add('active');
+                });
+            }
+            
+            if (homeLink) {
+                homeLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    mainContent.classList.remove('hidden');
+                    aboutPage.classList.remove('visible');
+                    
+                    // Update active state
+                    document.querySelector('.nav-item a.active').classList.remove('active');
+                    homeLink.classList.add('active');
+                });
+            }
+
+            // Modal functionality
+            const privacyLink = document.getElementById('privacyPolicyLink');
+            const termsLink = document.getElementById('termsOfServiceLink');
+            const privacyModal = document.getElementById('privacyPolicyModal');
+            const termsModal = document.getElementById('termsOfServiceModal');
+            
+            // Open modals
+            privacyLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                privacyModal.style.display = 'block';
+            });
+            
+            termsLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                termsModal.style.display = 'block';
+            });
+            
+            // Close modals when clicking on X
+            document.querySelectorAll('.close-policy-modal').forEach(function(closeBtn) {
+                closeBtn.addEventListener('click', function() {
+                    privacyModal.style.display = 'none';
+                    termsModal.style.display = 'none';
+                });
+            });
+            
+            // Close modals when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target === privacyModal) {
+                    privacyModal.style.display = 'none';
+                }
+                if (event.target === termsModal) {
+                    termsModal.style.display = 'none';
+                }
+            });
+
+            // Server modal existing functionality
+            const changeServer = document.getElementById('changeServer');
+            const serverModal = document.getElementById('serverModal');
+            const closeServerModal = document.getElementById('closeServerModal');
+            const confirmServerSelection = document.getElementById('confirmServerSelection');
+            
+            if (changeServer) {
+                changeServer.addEventListener('click', function() {
+                    serverModal.style.display = 'block';
+                });
+            }
+            
+            if (closeServerModal) {
+                closeServerModal.addEventListener('click', function() {
+                    serverModal.style.display = 'none';
+                });
+            }
+            
+            if (confirmServerSelection) {
+                confirmServerSelection.addEventListener('click', function() {
+                    // Handle server selection
+                    serverModal.style.display = 'none';
+                });
+            }
+        });
+
+        // Your original script.js content would go here
+        // This is a placeholder for the speed test functionality
