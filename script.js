@@ -406,17 +406,17 @@ document.getElementById('saveBtn').addEventListener('click', function() {
 });
 
 
-       // Navigation functionality
-        document.addEventListener('DOMContentLoaded', function() {
-            // Toggle navigation on mobile
-            const navToggle = document.getElementById('navToggle');
-            const navList = document.getElementById('navList');
+       // // Navigation functionality
+       //  document.addEventListener('DOMContentLoaded', function() {
+       //      // Toggle navigation on mobile
+       //      const navToggle = document.getElementById('navToggle');
+       //      const navList = document.getElementById('navList');
             
-            if (navToggle) {
-                navToggle.addEventListener('click', function() {
-                    navList.classList.toggle('active');
-                });
-            }
+       //      if (navToggle) {
+       //          navToggle.addEventListener('click', function() {
+       //              navList.classList.toggle('active');
+       //          });
+       //      }
 
             // Page navigation functionality
             const homeLink = document.getElementById('homeLink');
