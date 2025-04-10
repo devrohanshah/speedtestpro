@@ -1,0 +1,9 @@
+{
+  "redirects": [
+    {
+      "source": "/thank-you",
+      "destination": "/thank-you.html",
+      "permanent": true
+    }
+  ]
+}
