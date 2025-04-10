@@ -2,54 +2,184 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SpeedTest Pro - The Best Internet Speed Test</title>
-    <link rel="stylesheet" href="styles.css">
-    <script defer src="script.js"></script>
+    <meta name="description" content="Test your internet connection speed with our free, interactive speed test tool. Measure download, upload, and ping accurately.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>SpeedTest - Check Your Internet Speed</title>
 </head>
 <body>
+    <!-- Header and Navigation -->
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <a href="/" class="logo">
+                    <span class="logo-text">Speed<span class="highlight">Test</span></span>
+                </a>
+                <div class="nav-toggle" id="navToggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <ul class="nav-list" id="navList">
+                    <li class="nav-item"><a href="#" class="active">Home</a></li>
+                    <li class="nav-item"><a href="#">Results</a></li>
+                    <li class="nav-item"><a href="#">Settings</a></li>
+                    <li class="nav-item"><a href="#">Help</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
 
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="logo">SpeedTest Pro</div>
-        <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Contact</a></li>
-        </ul>
-    </nav>
-
-    <!-- Speed Test Container -->
-   <div class="container">
-        <h1>Speed Test</h1>
-
-        <div class="speedometer">
-            <div class="needle"></div>
+    <main>
+        <!-- Server Selection Area -->
+        <div class="server-selection">
+            <div class="server-info">
+                <i class="fas fa-server"></i>
+                <span id="currentServer">Testing Server: Auto (Best Server)</span>
+                <button id="changeServer" class="btn-small">Change</button>
+            </div>
         </div>
 
-        <div class="result">
-            <div id="downloadSpeed">Download Speed: - Mbps</div>
-            <div id="uploadSpeed">Upload Speed: - Mbps</div>
-            <div id="pingResult">Ping: - ms</div>
-            <div id="jitterResult">Jitter: - ms</div>
-            <div id="ispResult">ISP: -</div>
+        <!-- Main Test Container -->
+        <div class="speedtest-container">
+            <div class="speedometer">
+                <div class="gauge-container">
+                    <div class="gauge-bg"></div>
+                    <div class="gauge-indicator" id="gaugeIndicator"></div>
+                    <div class="gauge-center">
+                        <div id="testStatus">Ready</div>
+                        <div id="currentSpeed" class="speed-value">0.00</div>
+                        <div id="speedUnit" class="speed-unit">Mbps</div>
+                        <button id="startTest" class="btn-start">START</button>
+                    </div>
+                </div>
+                
+                <!-- Speed Test Results -->
+                <div class="test-results" id="testResults">
+                    <div class="result-item">
+                        <div class="result-label">
+                            <i class="fas fa-download"></i> DOWNLOAD
+                        </div>
+                        <div class="result-value" id="downloadResult">--</div>
+                        <div class="result-unit">Mbps</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">
+                            <i class="fas fa-upload"></i> UPLOAD
+                        </div>
+                        <div class="result-value" id="uploadResult">--</div>
+                        <div class="result-unit">Mbps</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">
+                            <i class="fas fa-clock"></i> PING
+                        </div>
+                        <div class="result-value" id="pingResult">--</div>
+                        <div class="result-unit">ms</div>
+                    </div>
+                    <div class="result-item">
+                        <div class="result-label">
+                            <i class="fas fa-hourglass-half"></i> JITTER
+                        </div>
+                        <div class="result-value" id="jitterResult">--</div>
+                        <div class="result-unit">ms</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Test Progress Indicator -->
+            <div class="test-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-steps">
+                    <div class="step active" id="stepPing">Ping</div>
+                    <div class="step" id="stepDownload">Download</div>
+                    <div class="step" id="stepUpload">Upload</div>
+                    <div class="step" id="stepComplete">Complete</div>
+                </div>
+            </div>
+            
+            <!-- Share Results -->
+            <div class="share-results" id="shareResults">
+                <button class="btn-share" id="shareBtn">
+                    <i class="fas fa-share-alt"></i> Share Results
+                </button>
+                <button class="btn-save" id="saveBtn">
+                    <i class="fas fa-save"></i> Save Results
+                </button>
+            </div>
         </div>
+        
+        <!-- Connection Information -->
+        <div class="connection-info">
+            <div class="info-item">
+                <div class="info-label">ISP</div>
+                <div class="info-value" id="ispInfo">--</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Server</div>
+                <div class="info-value" id="serverInfo">--</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">IP Address</div>
+                <div class="info-value" id="ipInfo">--</div>
+            </div>
+        </div>
+    </main>
 
-        <button id="startTest">Start Speed Test</button>
+    <!-- Server Selection Modal -->
+    <div class="modal" id="serverModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Select Test Server</h2>
+                <span class="close-btn" id="closeServerModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="server-list">
+                    <div class="server-option selected">
+                        <span class="server-name">Auto (Best Server)</span>
+                        <span class="server-ping">Auto</span>
+                    </div>
+                    <div class="server-option">
+                        <span class="server-name">New York, US</span>
+                        <span class="server-ping">45 ms</span>
+                    </div>
+                    <div class="server-option">
+                        <span class="server-name">London, UK</span>
+                        <span class="server-ping">95 ms</span>
+                    </div>
+                    <div class="server-option">
+                        <span class="server-name">Tokyo, Japan</span>
+                        <span class="server-ping">180 ms</span>
+                    </div>
+                    <div class="server-option">
+                        <span class="server-name">Sydney, Australia</span>
+                        <span class="server-ping">220 ms</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="confirmServerSelection" class="btn-primary">Select Server</button>
+            </div>
+        </div>
     </div>
 
-    <!-- Ad Placement -->
-<!--     <div class="ad-container">
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-        <ins class="adsbygoogle"
-            style="display:block"
-            data-ad-client="ca-pub-4607154590316308"
-            data-ad-slot="1234567890"
-            data-ad-format="auto"></ins>
-        <script>
-            (adsbygoogle = window.adsbygoogle || []).push({});
-        </script>
-    </div>
- -->
+    <!-- Footer -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-links">
+                <a href="#">About</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact</a>
+            </div>
+            <div class="footer-copyright">
+                &copy; 2025 SpeedTest. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
