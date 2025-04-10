@@ -8,6 +8,121 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <title>SpeedTest - Check Your Internet Speed</title>
+    <style>
+        /* Additional styles for modals and about page */
+        .about-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: none; /* Hidden by default */
+        }
+
+        .about-container.visible {
+            display: block;
+        }
+
+        .about-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .about-header h1 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .about-content {
+            line-height: 1.6;
+        }
+
+        .about-content p {
+            margin-bottom: 1rem;
+        }
+
+        .about-signature {
+            text-align: center;
+            margin-top: 3rem;
+            font-style: italic;
+            font-weight: bold;
+        }
+
+        .modal-policy {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-policy-content {
+            position: relative;
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 25px;
+            width: 70%;
+            max-width: 700px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            animation: modalFadeIn 0.3s;
+        }
+
+        .modal-policy-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .modal-policy-body {
+            max-height: 60vh;
+            overflow-y: auto;
+            line-height: 1.6;
+        }
+
+        .modal-policy-body h3 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        .modal-policy-body p {
+            margin-bottom: 15px;
+        }
+
+        .close-policy-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-policy-modal:hover {
+            color: #333;
+        }
+
+        @keyframes modalFadeIn {
+            from {opacity: 0; transform: translateY(-20px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+
+        .main-content {
+            display: block;
+        }
+
+        .main-content.hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <!-- Header and Navigation -->
@@ -21,146 +136,283 @@
                     <i class="fas fa-bars"></i>
                 </div>
                 <ul class="nav-list" id="navList">
-                    <li class="nav-item"><a href="#" class="active">Home</a></li>
+                    <li class="nav-item"><a href="#" id="homeLink" class="active">Home</a></li>
                     <li class="nav-item"><a href="#">Results</a></li>
-                    <li class="nav-item"><a href="about.html">About</a></li>
+                    <li class="nav-item"><a href="#" id="aboutLink">About</a></li>
                     <li class="nav-item"><a href="contact.html">Contact</a></li>
                 </ul>
             </div>
         </nav>
     </header>
 
-    <main>
-        <!-- Server Selection Area -->
-        <div class="server-selection">
-            <div class="server-info">
-                <i class="fas fa-server"></i>
-                <span id="currentServer">Testing Server: Auto (Best Server)</span>
-                <button id="changeServer" class="btn-small">Change</button>
+    <!-- Main Speed Test Content -->
+    <div id="mainContent" class="main-content">
+        <main>
+            <!-- Server Selection Area -->
+            <div class="server-selection">
+                <div class="server-info">
+                    <i class="fas fa-server"></i>
+                    <span id="currentServer">Testing Server: Auto (Best Server)</span>
+                    <button id="changeServer" class="btn-small">Change</button>
+                </div>
             </div>
-        </div>
 
-        <!-- Main Test Container -->
-        <div class="speedtest-container">
-            <div class="speedometer">
-                <div class="gauge-container">
-                    <div class="gauge-bg"></div>
-                    <div class="gauge-indicator" id="gaugeIndicator"></div>
-                    <div class="gauge-center">
-                        <div id="testStatus">Ready</div>
-                        <div id="currentSpeed" class="speed-value">0.00</div>
-                        <div id="speedUnit" class="speed-unit">Mbps</div>
-                        <button id="startTest" class="btn-start">START</button>
+            <!-- Main Test Container -->
+            <div class="speedtest-container">
+                <div class="speedometer">
+                    <div class="gauge-container">
+                        <div class="gauge-bg"></div>
+                        <div class="gauge-indicator" id="gaugeIndicator"></div>
+                        <div class="gauge-center">
+                            <div id="testStatus">Ready</div>
+                            <div id="currentSpeed" class="speed-value">0.00</div>
+                            <div id="speedUnit" class="speed-unit">Mbps</div>
+                            <button id="startTest" class="btn-start">START</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Speed Test Results -->
+                    <div class="test-results" id="testResults">
+                        <div class="result-item">
+                            <div class="result-label">
+                                <i class="fas fa-download"></i> DOWNLOAD
+                            </div>
+                            <div class="result-value" id="downloadResult">--</div>
+                            <div class="result-unit">Mbps</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">
+                                <i class="fas fa-upload"></i> UPLOAD
+                            </div>
+                            <div class="result-value" id="uploadResult">--</div>
+                            <div class="result-unit">Mbps</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">
+                                <i class="fas fa-clock"></i> PING
+                            </div>
+                            <div class="result-value" id="pingResult">--</div>
+                            <div class="result-unit">ms</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">
+                                <i class="fas fa-hourglass-half"></i> JITTER
+                            </div>
+                            <div class="result-value" id="jitterResult">--</div>
+                            <div class="result-unit">ms</div>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Speed Test Results -->
-                <div class="test-results" id="testResults">
-                    <div class="result-item">
-                        <div class="result-label">
-                            <i class="fas fa-download"></i> DOWNLOAD
-                        </div>
-                        <div class="result-value" id="downloadResult">--</div>
-                        <div class="result-unit">Mbps</div>
+                <!-- Test Progress Indicator -->
+                <div class="test-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
                     </div>
-                    <div class="result-item">
-                        <div class="result-label">
-                            <i class="fas fa-upload"></i> UPLOAD
-                        </div>
-                        <div class="result-value" id="uploadResult">--</div>
-                        <div class="result-unit">Mbps</div>
+                    <div class="progress-steps">
+                        <div class="step active" id="stepPing">Ping</div>
+                        <div class="step" id="stepDownload">Download</div>
+                        <div class="step" id="stepUpload">Upload</div>
+                        <div class="step" id="stepComplete">Complete</div>
                     </div>
-                    <div class="result-item">
-                        <div class="result-label">
-                            <i class="fas fa-clock"></i> PING
-                        </div>
-                        <div class="result-value" id="pingResult">--</div>
-                        <div class="result-unit">ms</div>
-                    </div>
-                    <div class="result-item">
-                        <div class="result-label">
-                            <i class="fas fa-hourglass-half"></i> JITTER
-                        </div>
-                        <div class="result-value" id="jitterResult">--</div>
-                        <div class="result-unit">ms</div>
-                    </div>
+                </div>
+                
+                <!-- Share Results -->
+                <div class="share-results" id="shareResults">
+                    <button class="btn-share" id="shareBtn">
+                        <i class="fas fa-share-alt"></i> Share Results
+                    </button>
+                    <button class="btn-save" id="saveBtn">
+                        <i class="fas fa-save"></i> Save Results
+                    </button>
                 </div>
             </div>
             
-            <!-- Test Progress Indicator -->
-            <div class="test-progress">
-                <div class="progress-bar">
-                    <div class="progress-fill" id="progressFill"></div>
+            <!-- Connection Information -->
+            <div class="connection-info">
+                <div class="info-item">
+                    <div class="info-label">ISP</div>
+                    <div class="info-value" id="ispInfo">--</div>
                 </div>
-                <div class="progress-steps">
-                    <div class="step active" id="stepPing">Ping</div>
-                    <div class="step" id="stepDownload">Download</div>
-                    <div class="step" id="stepUpload">Upload</div>
-                    <div class="step" id="stepComplete">Complete</div>
+                <div class="info-item">
+                    <div class="info-label">Server</div>
+                    <div class="info-value" id="serverInfo">--</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">IP Address</div>
+                    <div class="info-value" id="ipInfo">--</div>
                 </div>
             </div>
-            
-            <!-- Share Results -->
-            <div class="share-results" id="shareResults">
-                <button class="btn-share" id="shareBtn">
-                    <i class="fas fa-share-alt"></i> Share Results
-                </button>
-                <button class="btn-save" id="saveBtn">
-                    <i class="fas fa-save"></i> Save Results
-                </button>
+        </main>
+
+        <!-- Server Selection Modal -->
+        <div class="modal" id="serverModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Select Test Server</h2>
+                    <span class="close-btn" id="closeServerModal">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="server-list">
+                        <div class="server-option selected">
+                            <span class="server-name">Auto (Best Server)</span>
+                            <span class="server-ping">Auto</span>
+                        </div>
+                        <div class="server-option">
+                            <span class="server-name">New York, US</span>
+                            <span class="server-ping">45 ms</span>
+                        </div>
+                        <div class="server-option">
+                            <span class="server-name">London, UK</span>
+                            <span class="server-ping">95 ms</span>
+                        </div>
+                        <div class="server-option">
+                            <span class="server-name">Tokyo, Japan</span>
+                            <span class="server-ping">180 ms</span>
+                        </div>
+                        <div class="server-option">
+                            <span class="server-name">Sydney, Australia</span>
+                            <span class="server-ping">220 ms</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="confirmServerSelection" class="btn-primary">Select Server</button>
+                </div>
             </div>
+        </div>
+    </div>
+
+    <!-- About Page -->
+    <div id="aboutPage" class="about-container">
+        <div class="about-header">
+            <h1>About SpeedTest</h1>
         </div>
         
-        <!-- Connection Information -->
-        <div class="connection-info">
-            <div class="info-item">
-                <div class="info-label">ISP</div>
-                <div class="info-value" id="ispInfo">--</div>
+        <div class="about-content">
+            <p>Welcome to SpeedTest, your reliable tool for measuring internet connection performance. Launched in 2023, SpeedTest aims to provide users with accurate, easy-to-understand metrics about their internet speed.</p>
+            
+            <p>Our platform measures four key aspects of your connection:</p>
+            <ul>
+                <li><strong>Download Speed</strong> - How quickly data is transferred from the internet to your device</li>
+                <li><strong>Upload Speed</strong> - How quickly data is transferred from your device to the internet</li>
+                <li><strong>Ping</strong> - The response time between your device and the server (lower is better)</li>
+                <li><strong>Jitter</strong> - The variation in ping over time, indicating connection stability</li>
+            </ul>
+            
+            <p>Using SpeedTest is simple - just click the START button and wait for the test to complete. Our algorithm selects the best server based on your location for the most accurate results, but you can also manually select from our network of servers worldwide.</p>
+            
+            <p>SpeedTest was created to help users troubleshoot connection issues, verify if they're getting the internet speeds promised by their service provider, and make informed decisions about their internet needs.</p>
+            
+            <p>Whether you're a casual internet user, a remote worker, or an avid gamer, having insight into your connection performance can help you optimize your online experience.</p>
+            
+            <p>Feel free to contact us with any questions, suggestions, or feedback through our Contact page.</p>
+        </div>
+        
+        <div class="about-signature">
+            <p>Developed with passion by Manish Kumar</p>
+            <p>© 2025 SpeedTest</p>
+        </div>
+    </div>
+
+    <!-- Privacy Policy Modal -->
+    <div id="privacyPolicyModal" class="modal-policy">
+        <div class="modal-policy-content">
+            <div class="modal-policy-header">
+                <h2>Privacy Policy</h2>
+                <span class="close-policy-modal">&times;</span>
             </div>
-            <div class="info-item">
-                <div class="info-label">Server</div>
-                <div class="info-value" id="serverInfo">--</div>
-            </div>
-            <div class="info-item">
-                <div class="info-label">IP Address</div>
-                <div class="info-value" id="ipInfo">--</div>
+            <div class="modal-policy-body">
+                <p>Last Updated: April 10, 2025</p>
+
+                <p>At SpeedTest, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our website.</p>
+
+                <h3>Information We Collect</h3>
+                <p>When you use SpeedTest, we collect the following information:</p>
+                <ul>
+                    <li><strong>Connection Data:</strong> IP address, ISP information, and location data (approximated by IP)</li>
+                    <li><strong>Test Results:</strong> Download speed, upload speed, ping, and jitter measurements</li>
+                    <li><strong>Device Information:</strong> Browser type, operating system, and device type</li>
+                    <li><strong>Usage Data:</strong> How you interact with our website, frequency of use, and features accessed</li>
+                </ul>
+
+                <h3>How We Use Your Information</h3>
+                <p>We use the collected information for the following purposes:</p>
+                <ul>
+                    <li>To provide and maintain our speed test service</li>
+                    <li>To improve and optimize our website functionality</li>
+                    <li>To generate anonymous statistics about internet speeds across different regions</li>
+                    <li>To detect and prevent technical issues or abuse</li>
+                </ul>
+
+                <h3>Data Sharing and Disclosure</h3>
+                <p>We do not sell or rent your personal information to third parties. We may share anonymized, aggregated data about internet speeds with researchers, ISPs, or in public reports. We may disclose information if required by law or to protect our rights.</p>
+
+                <h3>Data Security</h3>
+                <p>We implement appropriate security measures to protect against unauthorized access or alteration of your data. However, no method of transmission over the Internet is 100% secure, and we cannot guarantee absolute security.</p>
+
+                <h3>Your Data Rights</h3>
+                <p>Depending on your location, you may have rights regarding your personal information, including the right to access, correct, or delete data we hold about you. Contact us to exercise these rights.</p>
+
+                <h3>Cookies and Tracking</h3>
+                <p>We use cookies and similar tracking technologies to enhance your experience on our website. You can adjust your browser settings to refuse cookies, but this may limit functionality.</p>
+
+                <h3>Changes to This Privacy Policy</h3>
+                <p>We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last Updated" date.</p>
+
+                <h3>Contact Us</h3>
+                <p>If you have questions about this Privacy Policy, please contact us at privacy@speedtest-example.com.</p>
             </div>
         </div>
-    </main>
+    </div>
 
-    <!-- Server Selection Modal -->
-    <div class="modal" id="serverModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Select Test Server</h2>
-                <span class="close-btn" id="closeServerModal">&times;</span>
+    <!-- Terms of Service Modal -->
+    <div id="termsOfServiceModal" class="modal-policy">
+        <div class="modal-policy-content">
+            <div class="modal-policy-header">
+                <h2>Terms of Service</h2>
+                <span class="close-policy-modal">&times;</span>
             </div>
-            <div class="modal-body">
-                <div class="server-list">
-                    <div class="server-option selected">
-                        <span class="server-name">Auto (Best Server)</span>
-                        <span class="server-ping">Auto</span>
-                    </div>
-                    <div class="server-option">
-                        <span class="server-name">New York, US</span>
-                        <span class="server-ping">45 ms</span>
-                    </div>
-                    <div class="server-option">
-                        <span class="server-name">London, UK</span>
-                        <span class="server-ping">95 ms</span>
-                    </div>
-                    <div class="server-option">
-                        <span class="server-name">Tokyo, Japan</span>
-                        <span class="server-ping">180 ms</span>
-                    </div>
-                    <div class="server-option">
-                        <span class="server-name">Sydney, Australia</span>
-                        <span class="server-ping">220 ms</span>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button id="confirmServerSelection" class="btn-primary">Select Server</button>
+            <div class="modal-policy-body">
+                <p>Last Updated: April 10, 2025</p>
+
+                <p>Please read these Terms of Service ("Terms") carefully before using the SpeedTest website ("Service").</p>
+
+                <h3>1. Acceptance of Terms</h3>
+                <p>By accessing or using our Service, you agree to be bound by these Terms. If you disagree with any part of the Terms, you may not access the Service.</p>
+
+                <h3>2. Use of the Service</h3>
+                <p>SpeedTest grants you a non-exclusive, non-transferable right to use the Service for personal, non-commercial purposes. You agree not to:</p>
+                <ul>
+                    <li>Use the Service in any way that could damage or overburden it</li>
+                    <li>Attempt to gain unauthorized access to any part of the Service</li>
+                    <li>Use automated scripts or bots to access the Service</li>
+                    <li>Use the Service for any illegal purpose</li>
+                </ul>
+
+                <h3>3. Test Results and Data</h3>
+                <p>Test results are provided for informational purposes only. Many factors can affect speed test results, including network congestion, your device capabilities, and server load. We do not guarantee the accuracy of results.</p>
+
+                <h3>4. Intellectual Property</h3>
+                <p>The Service and its original content, features, and functionality are owned by SpeedTest and are protected by copyright, trademark, and other intellectual property laws. You may not copy, modify, or create derivative works based on our Service.</p>
+
+                <h3>5. Disclaimer of Warranties</h3>
+                <p>The Service is provided "as is" and "as available" without warranties of any kind, either express or implied. We do not warrant that the Service will be uninterrupted, secure, or error-free.</p>
+
+                <h3>6. Limitation of Liability</h3>
+                <p>SpeedTest shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your access to or use of, or inability to access or use, the Service.</p>
+
+                <h3>7. Changes to Terms</h3>
+                <p>We reserve the right to modify or replace these Terms at any time. It is your responsibility to review these Terms periodically for changes.</p>
+
+                <h3>8. Termination</h3>
+                <p>We may terminate or suspend access to our Service immediately, without prior notice, for conduct that we believe violates these Terms or is harmful to other users of the Service or third parties.</p>
+
+                <h3>9. Governing Law</h3>
+                <p>These Terms shall be governed by the laws of the jurisdiction in which SpeedTest operates, without regard to its conflict of law provisions.</p>
+
+                <h3>10. Contact Us</h3>
+                <p>If you have any questions about these Terms, please contact us at terms@speedtest-example.com.</p>
             </div>
         </div>
     </div>
@@ -169,8 +421,8 @@
     <footer>
         <div class="footer-container">
             <div class="footer-links">
-                <a href="#">Privacy Policy</a>
-                <a href="#">Terms of Service</a>
+                <a href="#" id="privacyPolicyLink">Privacy Policy</a>
+                <a href="#" id="termsOfServiceLink">Terms of Service</a>
             </div>
             <div class="footer-copyright">
                 &copy; 2025 SpeedTest. All rights reserved.
@@ -178,6 +430,112 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script>
+        // Navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle navigation on mobile
+            const navToggle = document.getElementById('navToggle');
+            const navList = document.getElementById('navList');
+            
+            if (navToggle) {
+                navToggle.addEventListener('click', function() {
+                    navList.classList.toggle('active');
+                });
+            }
+
+            // About page functionality
+            const aboutLink = document.getElementById('aboutLink');
+            const homeLink = document.getElementById('homeLink');
+            const mainContent = document.getElementById('mainContent');
+            const aboutPage = document.getElementById('aboutPage');
+            
+            if (aboutLink) {
+                aboutLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    mainContent.classList.add('hidden');
+                    aboutPage.classList.add('visible');
+                    
+                    // Update active state
+                    document.querySelector('.nav-item a.active').classList.remove('active');
+                    aboutLink.classList.add('active');
+                });
+            }
+            
+            if (homeLink) {
+                homeLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    mainContent.classList.remove('hidden');
+                    aboutPage.classList.remove('visible');
+                    
+                    // Update active state
+                    document.querySelector('.nav-item a.active').classList.remove('active');
+                    homeLink.classList.add('active');
+                });
+            }
+
+            // Modal functionality
+            const privacyLink = document.getElementById('privacyPolicyLink');
+            const termsLink = document.getElementById('termsOfServiceLink');
+            const privacyModal = document.getElementById('privacyPolicyModal');
+            const termsModal = document.getElementById('termsOfServiceModal');
+            
+            // Open modals
+            privacyLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                privacyModal.style.display = 'block';
+            });
+            
+            termsLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                termsModal.style.display = 'block';
+            });
+            
+            // Close modals when clicking on X
+            document.querySelectorAll('.close-policy-modal').forEach(function(closeBtn) {
+                closeBtn.addEventListener('click', function() {
+                    privacyModal.style.display = 'none';
+                    termsModal.style.display = 'none';
+                });
+            });
+            
+            // Close modals when clicking outside
+            window.addEventListener('click', function(event) {
+                if (event.target === privacyModal) {
+                    privacyModal.style.display = 'none';
+                }
+                if (event.target === termsModal) {
+                    termsModal.style.display = 'none';
+                }
+            });
+
+            // Server modal existing functionality
+            const changeServer = document.getElementById('changeServer');
+            const serverModal = document.getElementById('serverModal');
+            const closeServerModal = document.getElementById('closeServerModal');
+            const confirmServerSelection = document.getElementById('confirmServerSelection');
+            
+            if (changeServer) {
+                changeServer.addEventListener('click', function() {
+                    serverModal.style.display = 'block';
+                });
+            }
+            
+            if (closeServerModal) {
+                closeServerModal.addEventListener('click', function() {
+                    serverModal.style.display = 'none';
+                });
+            }
+            
+            if (confirmServerSelection) {
+                confirmServerSelection.addEventListener('click', function() {
+                    // Handle server selection
+                    serverModal.style.display = 'none';
+                });
+            }
+        });
+
+        // Your original script.js content would go here
+        // This is a placeholder for the speed test functionality
+    </script>
 </body>
 </html>
